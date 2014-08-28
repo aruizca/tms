@@ -16,15 +16,15 @@ var server = app.listen( process.env.PORT || 8080, function() {
 // Socket.io
 var io = require('socket.io')(server);
 
-app.set('cfg', cfg);
-app.set('io', io);
+// Controllers/Routes
+var routes = require('./server/controllers/index');
+var api = require('./server/controllers/api');
 
-// Routes
-var routes = require('./routes/index');
-var api = require('./routes/api');
+// Services
+var twitterService = require('./server/services/twitterService');
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'server/views'));
 app.set('view engine', 'jade');
 
 app.use(favicon());
@@ -71,19 +71,12 @@ app.use(function(err, req, res, next) {
     });
 });
 
-////////////////////
-var tweetStream = require('node-tweet-stream');
-var tweetStreamClient = new tweetStream(cfg['node-tweet-stream']);
-// We monitor twitter
-tweetStreamClient.track('javascript');
-tweetStreamClient.on('tweet', function(realTweet){
-    console.log(realTweet);
-    app.render('tweet', {'tweet': realTweet }, function(err, html) {
-        console.log(html);
-        // Sent tweet to all connected clients
-        io.emit('tweet', {"html": html});
-    });
-});
-////////////////////
-
 module.exports = app;
+
+// Initialize web-socket related services
+twitterService.initTwitterTrack(app, io);
+
+
+
+
+
