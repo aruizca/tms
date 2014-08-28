@@ -14,5 +14,6 @@ results
 npm-debug.log
 /.idea
 /node_modules
+/vendor
 
 smms.iml

@@ -2,6 +2,7 @@ var express = require('express');
 var twit = require('twit');
 var router = express.Router();
 
+
 var twitClient = new twit({
     consumer_key:         'SM5YN0yVagCqscImfalG1UiBq'
     , consumer_secret:      'LBlavUGoXGKQPCXuuXYvuspoAtr2WfQcKjcK14mgc88oDSRLK9'
@@ -24,5 +25,6 @@ router.get('/last-10-tweets', function(req, res){
         res.end();
     });
 });
+
 
 module.exports = router;

@@ -5,10 +5,23 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var cfg = require('./app-config.json');
+
+var debug = require('debug')('smms');
+var app = express();
+var server = app.listen( process.env.PORT || 8080, function() {
+    debug('Express server listening on port ' + server.address().port);
+});
+
+// Socket.io
+var io = require('socket.io')(server);
+
+app.set('cfg', cfg);
+app.set('io', io);
+
+// Routes
 var routes = require('./routes/index');
 var api = require('./routes/api');
-
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,7 +34,9 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
-
+if (app.get('env') === 'development') {
+    app.locals.pretty = true;
+}
 app.use('/', routes);
 app.use('/api', api);
 
@@ -56,5 +71,19 @@ app.use(function(err, req, res, next) {
     });
 });
 
+////////////////////
+var tweetStream = require('node-tweet-stream');
+var tweetStreamClient = new tweetStream(cfg['node-tweet-stream']);
+// We monitor twitter
+tweetStreamClient.track('javascript');
+tweetStreamClient.on('tweet', function(realTweet){
+    console.log(realTweet);
+    app.render('tweet', {'tweet': realTweet }, function(err, html) {
+        console.log(html);
+        // Sent tweet to all connected clients
+        io.emit('tweet', {"html": html});
+    });
+});
+////////////////////
 
 module.exports = app;
