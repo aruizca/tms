@@ -1,0 +1,33 @@
+extends layout
+block content
+
+    h1
+        a(href="/") Home
+        |  > REST API example
+    p This example shows both, how to create a REST API with Node.js and how to use the Twitter REST API through the&nbsp;
+        a(href="https://www.npmjs.org/package/twit", target="_blank")'twit'
+        |  module.
+    p It provides the specified number of raw last tweets for a particicular user using the&nbsp;
+        a(href="https://dev.twitter.com/docs/api/1.1/get/statuses/user_timeline", target="_blank") /statuses/user_timeline
+        |  endpoint.
+    p You can use the form bellow to test it and see how the service URL looks like. Or you can just type the url yourself with this format:
+    pre= "http://localhost:8080/api/last-tweets/<username>/<# of tweets>"
+
+    form#restapi-form
+        div
+            label(for="username") Username:
+            input#username(type="text", name="username")
+        div
+            label(for="numTweets") # of Tweets:
+            input#numTweets(type="text", name="numTweets")
+        div
+            button#send Send
+block footer
+    script.
+        $('#send').on('click', function(e) {
+          e.preventDefault();
+          location.href = '/api/last-tweets/' + $('#username').val() + '/' + $('#numTweets').val();
+        });
+
+
+

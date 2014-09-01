@@ -2,4 +2,7 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Examples available:
+  ul
+      li: a(href="/rest-api-example") REST API Example (using "twit" module)
+      li: a(href="/streaming-api-example") Streaming API Example to track keywords (using "node-tweet-stream" module)
