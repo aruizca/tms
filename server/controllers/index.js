@@ -14,8 +14,9 @@ router.get('/streaming-api-example', function(req, res) {
     res.render('streaming-api-example', { title: 'STREAMING API example' });
 });
 
-router.get('/tracker', function(req, res) {
-    res.render('tracker', { title: 'Tracker' });
+router.get('/streaming-api-example-2', function(req, res) {
+    res.render('streaming-api-example-2', { title: 'STREAMING API example 2' });
 });
+
 
 module.exports = router;

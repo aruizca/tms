@@ -10,4 +10,11 @@ router.get('/last-tweets/:username/:numTweets', function(req, res){
     });
 });
 
+router.get('/follows/:username', function(req, res){
+    var username = req.params.username ? req.params.username : '';
+    twitterService.getFollows(username, function(err, data) {
+        res.end(data);
+    });
+});
+
 module.exports = router;

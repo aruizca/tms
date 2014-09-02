@@ -6,16 +6,18 @@ block content
 
     h1
         a(href="/") Home
-        |  > STREAMING API example
-    p This example shows how to use the Twitter Streaming API to monitor a set of keywords using the 'node-tweet-stream' module.
+        |  > STREAMING API example 2
+    p This example shows how to use the Twitter Streaming API <a href="https://dev.twitter.com/docs/api/1.1/post/statuses/filter" target="_blank">("POST statuses/filter")</a> to monitor a set of keywords and users using the 'twit' module.
         | It also shows how to use the socket.io module to maintain a websocket based conversation between client and server.
-    p Unfortunately, later on I realized that this module does not support user tracking, only keywords. So I leave it here for those that are curious.
-    p Please provide a comma separated list of keywords you want to track. The provided one is just because it gives instant feedback due to the cadence of tweets worldwide,
+    p Please provide a comma separated list of keywords and usernames (without @) you want to track.
 
     form#streamingapi-form
         div
             label(for="keywords") Keywords (comma separated):
-            input#keywords(type="text", name="keywords", value="javascript,java")
+            input#keywords(type="text", name="keywords")
+        div
+            label(for="usernames") Usernames (comma separated):
+            input#usernames(type="text", name="usernames")
         div
             button#send Send
         div#tweetsHeader(style="display:none;")
@@ -29,7 +31,7 @@ block footer
         var socket;
         $(function() {
             socket = io.connect("http://localhost:8080");
-            socket.on('tweet', function(data){
+            socket.on('tweet2', function(data){
                 console.log(data);
                 $('#tweets').prepend(data.html);
             });
@@ -37,7 +39,10 @@ block footer
         $('#send').on('click', function(e) {
             e.preventDefault();
             $("#tweetsHeader").show();
-            socket.emit('keywords', $("#keywords").val());
+            socket.emit('track-twitter', {
+                "keywords": $("#keywords").val(),
+                "usernames": $("#usernames").val()
+            });
         });
 
 
