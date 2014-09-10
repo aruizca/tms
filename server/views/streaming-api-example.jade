@@ -20,7 +20,7 @@ block content
             button#send Send
         div#tweetsHeader(style="display:none;")
             h2 Tweets coming in ...
-                img(src="/img/ajax-loader.gif")
+                img(src="/assets/img/ajax-loader.gif")
 
         hr
         div#tweets
@@ -37,7 +37,7 @@ block footer
         $('#send').on('click', function(e) {
             e.preventDefault();
             $("#tweetsHeader").show();
-            socket.emit('keywords', $("#keywords").val());
+            socket.emit('send:keywords', $("#keywords").val());
         });
 
 

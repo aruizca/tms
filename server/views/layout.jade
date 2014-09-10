@@ -2,10 +2,46 @@ doctype html
 html
   head
     title= title
-    script(src="/vendor/jquery.js")
-    link(rel='stylesheet', href='/css/style.css')
+
+    meta(content='text/html; charset=UTF-8', http-equiv='Content-Type')
+    meta(content='IE=edge,chrome=1', http-equiv='X-UA-Compatible')
+    meta(content='width=device-width, initial-scale=1.0', name='viewport')
+
+    link(rel='stylesheet', href='/vendor/bootstrap.css')
+    link(rel='stylesheet', href='/vendor/font-awesome.css')
+    link(rel='stylesheet', href='/assets/css/style.css')
+
     block header
   body
-    block content
-    footer
-        block footer
+#wrap
+    .container
+        .row
+            .logo
+                h1 Social Media Monitoring Service (SMMS)
+        #navbar-container(data-offset-top='156')
+            .row.navbar.navbar-inverse
+                .navbar-header
+                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.nav-collapse')
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                .navbar-collapse.collapse()
+                    ul.nav.navbar-nav
+                        li()
+                            a(href='/')
+                                i.fa.fa-home
+                                | &nbsp;Home
+        .row
+            block content
+    #push
+footer#footer(role='contentinfo')
+    .container-fluid.footer
+        span Copyright © 2014 NICTA
+    script(src="/vendor/jquery.js")
+    script(src="/vendor/angular.js")
+    script(src="/vendor/angular-loader.js")
+    script(src="/vendor/angular-route.js")
+    script(src="/vendor/bootstrap.js")
+    script(src="/vendor/ui-bootstrap-tpls.js")
+
+    block footer

@@ -5,15 +5,13 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var cfg = require('./app-config.json');
-
 var debug = require('debug')('smms');
 var app = express();
 var server = app.listen( process.env.PORT || 8080, function() {
     debug('Express server listening on port ' + server.address().port);
 });
 
-// Socket.io
+// Hook Socket.io into Express
 var io = require('socket.io')(server);
 
 // Controllers/Routes
@@ -25,6 +23,7 @@ var twitterService = require('./server/services/twitterService');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'server/views'));
+// Jade template engine setup
 app.set('view engine', 'jade');
 
 app.use(favicon());
@@ -74,7 +73,7 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 // Initialize web-socket related services
-twitterService.initTwitterTrack(app, io);
+twitterService.initTwitterWebSocketServices(app, io);
 
 
 

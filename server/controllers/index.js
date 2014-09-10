@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'SMMS: Social Media Monitoring Service' });
+  res.render('home', { title: 'SMMS: Social Media Monitoring Service' });
 });
 
 router.get('/rest-api-example', function(req, res) {
@@ -17,6 +17,5 @@ router.get('/streaming-api-example', function(req, res) {
 router.get('/streaming-api-example-2', function(req, res) {
     res.render('streaming-api-example-2', { title: 'STREAMING API example 2' });
 });
-
 
 module.exports = router;

@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    form.form-horizontal(role='form')
+        legend Monitor Social Media Control
+        .form-group
+            label.col-sm-2.control-label(for='keywords') Keywords:
+            .col-sm-10
+                input#keywords.form-control(type='email', placeholder='(comma separated)')
+        .form-group
+            .col-sm-offset-2.col-sm-10
+                .btn-group
+                    button.btn.btn-success.toggleButton(type='submit', event='send:keywords', id='startButton') Start
+                    button.btn.btn-danger.toggleButton(type='submit', event='send:keywords', id='stopButton', disabled) Stop&nbsp;
+
+    .row
+        h3 Tweets&nbsp;
+            i.fa.fa-cog
+
+        h3 Instagram&nbsp;
+            i.fa.fa-cog
+
+
+block footer
+    script(src="/socket.io/socket.io.js")
+    script(src="/assets/js/home.js")
