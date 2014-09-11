@@ -10,8 +10,6 @@ util = require('util');
 
 var multipartMiddleware = multiparty();
 
-limit('4M');
-
 /* GET home page. */
 router.get('/', function(req, res) {
   res.render('home', { title: 'SMMS: Social Media Monitoring Service' });
