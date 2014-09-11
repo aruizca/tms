@@ -21,9 +21,8 @@
         "mongodb":"~1.4.10",
         "mongo-factory":"~0.0.5",
         "underscore": "~1.7.0",
-	"multiparty": "~3.3.2",
-	"connect-multiparty": "~1.2.4",
-	"excel-parser": "~0.2.2",
+    	"multiparty": "~3.3.2",
+        "string": "~2.0.1",
         "q": "~1.0.1"
     },
     "devDependencies": {

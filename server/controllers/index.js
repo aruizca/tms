@@ -1,14 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var registrationService = require('../services/registrationService');
-var fs = require('fs')
-//var multiparty = require('multiparty');
-var multiparty = require('connect-multiparty');
-var limit = require('limit');
+var multiparty = require('multiparty');
+var S = require('string');
 
 util = require('util');
-
-var multipartMiddleware = multiparty();
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -19,49 +15,21 @@ router.get('/registration', function(req, res) {
     res.render('registration', { title: 'Registration Upload Form' });
 });
 
-router.post('/registration/upload', multipartMiddleware, function(req, res) {
-    req.on('end', function (){
-	res.writeHead(200, {'content-type': 'text/plain'});
-	res.write('received upload:\n\n');
-	res.write(req.files.originalFilename);
+router.post('/registration/upload', function(req, res) {
 
-	
+    var form = new multiparty.Form();
 
-	console.log(req.body, req.files);
-	console.log(req.files.file.path);
-	registrationService.processExcelDocument(req.files.file.path);
+    form.on('file', function(name, file) {
+        if (S(file.originalFilename).endsWith('.csv')) {
+            registrationService.processCsvDocument(file.path);
+            res.redirect("/registration?result=1");
+        } else {
+            res.redirect("/registration?result=2");
+        }
     });
-    
-    
-    return;
 
-    // var body = '';
-    // filePath = __dirname + '/public/data.txt';
-    // req.on('data', function(data) {
-    //     body += data;
-    // 	console.log(data);
+    form.parse(req);
 
-    // });
-
-    // req.on('end', function (){
-    //     fs.appendFile(filePath, body, function() {
-    //     });
-    // });
-
-    // TODO Use https://github.com/andrewrk/node-multiparty/ to get the file
-    // TODO Send file to registrationService
-    // var form = new multiparty.Form();
-    
-    // form.parse(req, function(err, fields, files) {
-    // 	registrationService.processExcelDocument(files[0]);
-    // 	res.writeHead(200, {'content-type': 'text/plain'});
-    // 	res.write('received upload:\n\n');
-    // 	console.log(files[0]);
-    // 	res.end(util.inspect({fields: fields, files: files}));
-    // });
-
-    return;
 });
-
 
 module.exports = router;
