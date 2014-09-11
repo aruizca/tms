@@ -1,0 +1,11 @@
+extends layouts/main
+block content
+    form.form-horizontal(role='form',action='/registration/upload',enctype="multipart/form-data",method="post")
+        legend Registration Upload Form
+        .form-group
+            label.col-sm-2.control-label(for='file') Registration file:
+            .col-sm-10
+                input#file.form-control(type='file', name='file', placeholder='excel file')
+        .form-group
+            .col-sm-offset-2.col-sm-10
+                button.btn.btn-primary(type='submit', id='uploadButton') Upload
