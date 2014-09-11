@@ -1,4 +1,22 @@
+/**
+ *
+ * @param status
+ */
+var applyStatus = function(status) {
+    $("#keywords").val(status.keywords);
+    $(".toggleButton").attr("disabled", true);
+    if (status.running) {
+        $("#stopButton").removeAttr("disabled");
+        $("i.fa-cog").addClass("fa-spin");
+    } else {
+        $("#startButton").removeAttr("disabled");
+        $("i.fa-cog").removeClass("fa-spin");
+    }
+};
 
+/**
+ * Execute on load
+ */
 $(function() {
     $(".toggleButton").on("click", function(e) {
         e.preventDefault();
@@ -10,7 +28,13 @@ $(function() {
 
     // Every time there is a new tweet
     socket.on("server:tweet", function(tweet){
-        console.log(tweet);
+        console.log(JSON.parse(tweet));
+    });
+
+    // Every time someone changes the status
+    socket.on("server:status-change", function(status){
+        console.log(status);
+        applyStatus(status);
     });
 
     $("#startButton").on("click", function(e) {

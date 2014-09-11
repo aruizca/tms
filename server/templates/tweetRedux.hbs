@@ -8,7 +8,7 @@
         "profile_image_url": "{{user.profile_image_url}}"
     }
     {{#if retweeted_status}}
-    ", retweeted_status": {
+    , "retweeted_status": {
         "created_at": "{{retweeted_status.created_at}}",
         "id": "{{retweeted_status.id}}",
         "text": "{{retweeted_status.text}}",
@@ -16,7 +16,7 @@
             "id": "{{retweeted_status.user.id}}",
             "screen_name": "{{retweeted_status.user.screen_name}}",
             "profile_image_url": "{{retweeted_status.user.profile_image_url}}"
-        },
+        }
     }
     {{/if}}
     {{#if entities.media}}
@@ -30,6 +30,6 @@
             {{/if}}
         {{/each}}
         ]
-    },
+    }
     {{/if}}
 }

@@ -10,6 +10,9 @@
         "consumer_secret": "LBlavUGoXGKQPCXuuXYvuspoAtr2WfQcKjcK14mgc88oDSRLK9",
         "access_token": "42127167-As4tYHEwpSU2t2T2TTs1N4s2TIbPIXIrwd6iwLPbR",
         "access_token_secret": "fQiAM7rkKGlVf61l8EmUOlTr0FYpEBQmMszGaX3RbY5CX"
+    },
+    "mongodb": {
+        "url": "mongodb://localhost:27017/TEDxCanberra"
     }
 
 }

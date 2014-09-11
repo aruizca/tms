@@ -4,8 +4,22 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var cfg = require('./app-config');
 var debug = require('debug')('smms');
+
+// DB Connection
+// -------------
+// Initialize mongofactory
+var mongoFactory = require('mongo-factory');
+
+mongoFactory.getConnection(cfg.mongodb.url).then(function(db) {
+    debug("MongoDB Connection Pool has been initialized");
+});
+
+
+// Web Application
+// ---------------
+
 var app = express();
 var server = app.listen( process.env.PORT || 8080, function() {
     debug('Express server listening on port ' + server.address().port);
