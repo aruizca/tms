@@ -18,21 +18,29 @@ var applyStatus = function(status) {
  * Execute on load
  */
 $(function() {
-    $(".toggleButton").on("click", function(e) {
-        e.preventDefault();
-        $(".toggleButton").removeAttr("disabled");
-        $(this).attr("disabled", true);
-    });
-
+    // Enable websocket connection
     var socket = io.connect(document.location.host);
+
+    // Initialize status
+    socket.emit("client:status-report", function(status) {
+        console.log(status);
+        applyStatus(status);
+    });
 
     // Every time there is a new tweet
     socket.on("server:tweet", function(tweet){
         console.log(JSON.parse(tweet));
     });
 
+
+    $(".toggleButton").on("click", function(e) {
+        e.preventDefault();
+        $(".toggleButton").removeAttr("disabled");
+        $(this).attr("disabled", true);
+    });
+
     // Every time someone changes the status
-    socket.on("server:status-change", function(status){
+    socket.on("server:status-update", function(status){
         console.log(status);
         applyStatus(status);
     });

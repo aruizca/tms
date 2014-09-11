@@ -37,7 +37,7 @@ var initTwitterWebSocketServices = function(app, io) {
             // Status management
             status.running = true;
             status.keywords = keywords;
-            io.emit('server:status-change', status);
+            io.emit('server:status-update', status);
             // Remove previous keywords filter, if any
             tweetStreamClient._filters.tracking = {};
             // Add new keywords filter
@@ -71,10 +71,13 @@ var initTwitterWebSocketServices = function(app, io) {
         socket.on('client:stop', function () {
             // Status management
             status.running = false;
-            io.emit('server:status-change', status);
+            io.emit('server:status-update', status);
         });
 
-
+        // "client:stop" event handling
+        socket.on('client:status-report', function () {
+            io.emit('server:status-update', status);
+        });
     });
 };
 
