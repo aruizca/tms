@@ -21,7 +21,11 @@ mongoFactory.getConnection(cfg.mongodb.url).then(function(db) {
 // ---------------
 
 var app = express();
-var server = app.listen( process.env.PORT || 8080, function() {
+
+
+
+
+var server = app.listen( process.env.PORT || 80, function() {
     debug('Express server listening on port ' + server.address().port);
 });
 
