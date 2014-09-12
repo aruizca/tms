@@ -21,6 +21,7 @@ router.post('/registration/upload', function(req, res) {
 
     form.on('file', function(name, file) {
         if (S(file.originalFilename).endsWith('.xlsx')) {
+	    console.log("Processing document " + file.path);
             registrationService.processExcelDocument(file.path);
             res.redirect("/registration?result=1");
         } else {
