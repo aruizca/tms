@@ -4,7 +4,6 @@ var registrationService = require('../services/registrationService');
 var fs = require('fs')
 //var multiparty = require('multiparty');
 var multiparty = require('connect-multiparty');
-var limit = require('limit');
 
 util = require('util');
 
@@ -20,17 +19,16 @@ router.get('/registration', function(req, res) {
 });
 
 router.post('/registration/upload', multipartMiddleware, function(req, res) {
-    req.on('end', function (){
-	res.writeHead(200, {'content-type': 'text/plain'});
-	res.write('received upload:\n\n');
-	res.write(req.files.originalFilename);
-
-	
-
-	console.log(req.body, req.files);
-	console.log(req.files.file.path);
-	registrationService.processExcelDocument(req.files.file.path);
-    });
+    res.writeHead(200, {'content-type': 'text/plain'});
+    res.write('receiving upload...');
+    res.end(req.files.originalFilename);
+    console.log(req.body, req.files);
+    console.log(req.files.file.path);
+    registrationService.processExcelDocument(req.files.file.path);
+    // req.on('end', function (){
+    // 	//res.writeHead(200, {'content-type': 'text/plain'});
+    // 	res.write('Upload completed. \n\n');
+    // });
     
     
     return;
