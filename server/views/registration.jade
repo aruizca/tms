@@ -1,5 +1,7 @@
 extends layouts/main
+
 block content
+    #alert.alert(role='alert',style='display:none')
     form.form-horizontal(role='form',action='/registration/upload',enctype="multipart/form-data",method="post")
         legend Registration Upload Form
         .form-group
@@ -9,3 +11,7 @@ block content
         .form-group
             .col-sm-offset-2.col-sm-10
                 button.btn.btn-primary(type='submit', id='uploadButton') Upload
+
+block footer
+    script(src="/vendor/purl.js")
+    script(src="/assets/js/registration.js")

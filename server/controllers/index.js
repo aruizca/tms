@@ -28,6 +28,10 @@ router.post('/registration/upload', function(req, res) {
         }
     });
 
+    form.on('error', function(err){
+        res.redirect("/registration?result=3");
+    });
+
     form.parse(req);
 
 });
