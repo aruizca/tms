@@ -22,6 +22,7 @@ var processExcelDocument = function(document) {
 		      function(err, records){
 			  firstRow = records[0];
 			  if(err) console.error(err);
+			  db.collection("registration").remove();
 			  for(var row in records) {
 			      //console.log(records[row]);
 			      var jsonObj = {}
@@ -29,10 +30,16 @@ var processExcelDocument = function(document) {
 			      for(var column in records[row]) {
 				  fieldname = records[0][column];
 				  console.log(fieldname);
-				  jsonObj[fieldname] = records[row][column]
+
+				  if (str.indexOf("|") >= 0){
+				      var result = records[row][column]. split('|');
+				      jsonObj[fieldname] = result;
+				  } else {
+				      jsonObj[fieldname] = records[row][column]
+				  }
 			      }
-			      var json_version = JSON.parse(jsonObj);
-			      console.log(json_version);
+			      var json_version = JSON.parse( JSON.string(jsonObj));
+			      //console.log(json_version);
 			      db.collection("registration").insert(json_version, function (err) {console.log(err);});
 			  }
 		      });
