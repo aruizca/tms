@@ -16,14 +16,9 @@ mongoFactory.getConnection(cfg.mongodb.url).then(function(db) {
     debug("MongoDB Connection Pool has been initialized");
 });
 
-
 // Web Application
 // ---------------
-
 var app = express();
-
-
-
 
 var server = app.listen( process.env.PORT || 8080, function() {
     debug('Express server listening on port ' + server.address().port);
