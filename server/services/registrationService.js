@@ -40,13 +40,13 @@ var processExcelDocument = function(document) {
 				  console.log(fieldname);
 
 				  if (records[row][column].indexOf("|") >= 0){
-				      var result = records[row][column]. split('|');
+				      var result = records[row][column].split('|');
 				      jsonObj[fieldname] = result;
 				  } else {
 				      jsonObj[fieldname] = records[row][column]
 				  }
 			      }
-			      var json_version = JSON.parse( JSON.string(jsonObj));
+			      var json_version = JSON.parse( JSON.stringify(jsonObj));
 			      //console.log(json_version);
 			      db.collection("registration").insert(json_version, function (err) {console.log(err);});
 			  }
