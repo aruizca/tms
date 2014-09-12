@@ -22,7 +22,15 @@ var processExcelDocument = function(document) {
 		      function(err, records){
 			  firstRow = records[0];
 			  if(err) console.error(err);
-			  db.collection("registration").remove();
+			  //db.collection('registration').remove();
+			  db.collection('registration',function(err, collection){
+			      collection.remove({},function(err, removed){
+				  if(err) console.error(err);
+			      });
+			  });
+
+			  db.createCollection('registration');
+			  console.error("Completed flushing the database.");
 			  for(var row in records) {
 			      //console.log(records[row]);
 			      var jsonObj = {}
@@ -31,7 +39,7 @@ var processExcelDocument = function(document) {
 				  fieldname = records[0][column];
 				  console.log(fieldname);
 
-				  if (str.indexOf("|") >= 0){
+				  if (records[row][column].indexOf("|") >= 0){
 				      var result = records[row][column]. split('|');
 				      jsonObj[fieldname] = result;
 				  } else {
