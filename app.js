@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
@@ -39,6 +40,7 @@ app.set('views', path.join(__dirname, 'server/views'));
 // Jade template engine setup
 app.set('view engine', 'jade');
 
+app.use(cors());
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
