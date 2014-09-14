@@ -50,16 +50,17 @@ var processExcelDocument = function(document) {
     				      jsonObj[fieldname] = records[row][column]
     				  }
     			      }
-    			      var json_version = JSON.parse( JSON.stringify(jsonObj));
+    			      //var json_version = JSON.parse( JSON.stringify(jsonObj));
     			      //console.log(json_version);
     			      try { 
-    				  db.collection("registration").insert(json_version, function (err) {console.log(err);});
+    				  db.collection("registration").insert(jsonObj, function (err) {console.log(err);});
 				  
     			      } catch (e) {
     			  	  debug(e);
     			      }
     			  }
     		      });
+    db.close();
 }
 
 exports.processExcelDocument = processExcelDocument;
