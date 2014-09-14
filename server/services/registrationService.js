@@ -16,41 +16,50 @@ var processExcelDocument = function(document) {
 	console.log(worksheets);
     });
 
+    db.collection('registration',function(err, collection){
+    	collection.remove({},function(err, removed){
+    	    if(err) console.error(err);
+    	});
+    });
+    
+    db.createCollection('registration', function(err, collection) {
+	if(err) console.error(err);
+    });
     
     excelParser.parse({inFile: document, 
-		       worksheet: 1},
-		      function(err, records){
-			  firstRow = records[0];
-			  if(err) console.error(err);
-			  //db.collection('registration').remove();
-			  db.collection('registration',function(err, collection){
-			      collection.remove({},function(err, removed){
-				  if(err) console.error(err);
-			      });
-			  });
-
-			  db.createCollection('registration');
-			  console.error("Completed flushing the database.");
-			  for(var row in records) {
-			      //console.log(records[row]);
-			      var jsonObj = {}
-			      if ( row == 0 ) continue;
-			      for(var column in records[row]) {
-				  fieldname = records[0][column];
-				  console.log(fieldname);
-
-				  if (records[row][column].indexOf("|") >= 0){
-				      var result = records[row][column].split('|');
-				      jsonObj[fieldname] = result;
-				  } else {
-				      jsonObj[fieldname] = records[row][column]
-				  }
-			      }
-			      var json_version = JSON.parse( JSON.stringify(jsonObj));
-			      //console.log(json_version);
-			      db.collection("registration").insert(json_version, function (err) {console.log(err);});
+    		       worksheet: 1},
+    		      function(err, records){
+    			  firstRow = records[0];
+    			  if(err) {
+			      console.error(err);
+			      return;
 			  }
-		      });
+    			  console.error("Completed flushing the database.");
+    			  for(var row in records) {
+    			      console.log(records[row]);
+    			      var jsonObj = {}
+    			      if ( row == 0 ) continue;
+    			      for(var column in records[row]) {
+    				  fieldname = records[0][column];
+    				  console.log(fieldname);
+
+    				  if (records[row][column].indexOf("|") >= 0){
+    				      var result = records[row][column].split('|');
+    				      jsonObj[fieldname] = result;
+    				  } else {
+    				      jsonObj[fieldname] = records[row][column]
+    				  }
+    			      }
+    			      var json_version = JSON.parse( JSON.stringify(jsonObj));
+    			      //console.log(json_version);
+    			      try { 
+    				  db.collection("registration").insert(json_version, function (err) {console.log(err);});
+				  
+    			      } catch (e) {
+    			  	  debug(e);
+    			      }
+    			  }
+    		      });
 }
 
 exports.processExcelDocument = processExcelDocument;
