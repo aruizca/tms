@@ -6,62 +6,53 @@ var excelParser = require('excel-parser');
 // DB Connection
 var mongoFactory = require('mongo-factory');
 var db;
-mongoFactory.getConnection(cfg.mongodb.url).then(function(dbConnection) {
+mongoFactory.getConnection(cfg.mongodb.url).then(function (dbConnection) {
     db = dbConnection;
 });
 
-var processExcelDocument = function(document) {
-    excelParser.worksheets({inFile: document}, function(err, worksheets){
-	if(err) console.error(err);
-	console.log(worksheets);
-    });
+/**
+ *
+ * @param document
+ * @param res Http Response
+ * @param callback
+ */
+var processExcelDocument = function (document, res, callback) {
+    db.collection('registration', function (err, collection) {
+        collection.remove({}, function (err, removed) {
+            if (err) throw(err);
+            db.createCollection('registration', function (err, collection) {
+                if (err) throw(err);
+                console.log("Completed initializing the registration collection.");
 
-    db.collection('registration',function(err, collection){
-    	collection.remove({},function(err, removed){
-    	    if(err) console.error(err);
-    	});
-    });
-    
-    db.createCollection('registration', function(err, collection) {
-	if(err) console.error(err);
-    });
-    
-    excelParser.parse({inFile: document, 
-    		       worksheet: 1},
-    		      function(err, records){
-    			  firstRow = records[0];
-    			  if(err) {
-			      console.error(err);
-			      return;
-			  }
-    			  console.error("Completed flushing the database.");
-    			  for(var row in records) {
-    			      console.log(records[row]);
-    			      var jsonObj = {}
-    			      if ( row == 0 ) continue;
-    			      for(var column in records[row]) {
-    				  fieldname = records[0][column];
-    				  console.log(fieldname);
+                excelParser.parse({inFile: document, worksheet: 1}, function (err, records) {
+                    if (err) throw(err);
 
-    				  if (records[row][column].indexOf("|") >= 0){
-    				      var result = records[row][column].split('|');
-    				      jsonObj[fieldname] = result;
-    				  } else {
-    				      jsonObj[fieldname] = records[row][column]
-    				  }
-    			      }
-    			      //var json_version = JSON.parse( JSON.stringify(jsonObj));
-    			      //console.log(json_version);
-    			      try { 
-    				  db.collection("registration").insert(jsonObj, function (err) {console.log(err);});
-				  
-    			      } catch (e) {
-    			  	  debug(e);
-    			      }
-    			  }
-    		      });
-    db.close();
-}
+                    for (var row in records) {
+                        var jsonObj = {};
+                        if (row == 0) continue;
+                        for (var column in records[row]) {
+                            fieldname = records[0][column].trim();
+
+                            if (records[row][column].indexOf("|") >= 0) {
+                                var result = records[row][column].split('|');
+                                jsonObj[fieldname] = result;
+                            } else {
+                                jsonObj[fieldname] = records[row][column]
+                            }
+                        }
+
+                        db.collection("registration").insert(jsonObj, function () {
+                            if (err) throw(err);
+                        });
+                    }
+
+                    console.log("Completed loading registration records.");
+                    callback(res);
+                });
+            });
+        });
+    });
+};
 
 exports.processExcelDocument = processExcelDocument;
 

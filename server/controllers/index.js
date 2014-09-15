@@ -3,6 +3,7 @@ var router = express.Router();
 var registrationService = require('../services/registrationService');
 var multiparty = require('multiparty');
 var S = require('string');
+var debug = require('debug')('smms');
 
 util = require('util');
 
@@ -20,12 +21,18 @@ router.post('/registration/upload', function(req, res) {
     var form = new multiparty.Form();
 
     form.on('file', function(name, file) {
-        if (S(file.originalFilename).endsWith('.xlsx')) {
-	    console.log("Processing document " + file.path);
-            registrationService.processExcelDocument(file.path);
-            res.redirect("/registration?result=1");
-        } else {
-            res.redirect("/registration?result=2");
+        try {
+            if (S(file.originalFilename).endsWith('.xlsx')) {
+                console.log("Processing document " + file.originalFilename);
+                registrationService.processExcelDocument(file.path, res, function (res) {
+                    res.redirect("/registration?result=1");
+                });
+            } else {
+                res.redirect("/registration?result=2");
+            }
+        } catch (ex) {
+            debug(ex);
+            res.redirect("/registration?result=3");
         }
     });
 
