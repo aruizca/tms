@@ -2,6 +2,40 @@ var express = require('express');
 var router = express.Router();
 var S = require('string');
 var twitterService = require('../services/twitterService');
+var questionaireService = require('../services/questionaireService');
+
+router.get('/mongodbcollectionquery/:collection', function(req, res) {
+    console.log("Starting questionaire service callback.");
+    try {
+	questionaireService.queryMongoDBCollection(req, res, function (res) { 
+	    console.log("In questionaire service callback.");
+        });
+    }catch (ex) {
+	console.log("Something went wrong in questionaire service callback.");
+    }
+});
+
+router.post('/mongodbcollectionquery/:collection', function(req, res) {
+    var object = req.body;
+    var collection = req.params.collection;
+    try {
+	questionaireService.addFileToCollection(collection, object, res, function (res) {
+	    console.log("In questionaire service callback.");
+        });
+    }catch (ex) {
+	console.log("Something went wrong in questionaire service callback.");
+    }
+});
+
+router.get('/mongodbcollectionquery/:collection/:entity', function(req, res) { 
+    try {
+	questionaireService.queryMongoDBCollectionEntity(req, res, function (res) {
+	    console.log("In questionaire service callback.");
+        });
+    }catch (ex) {
+	console.log("Something went wrong in questionaire service callback.");
+    }
+});
 
 router.get('/tweets/by-pin/:userId', function(req, res){
     var userId = req.params.userId;
