@@ -95,8 +95,13 @@ var initTwitterWebSocketServices = function(app, io) {
  * @param callback
  */
 var getTweetsByScreenName = function(screenName, res, callback) {
-    db.collection('tweets').find({'user.screen_name': screenName}).toArray(function(err, tweets) {
 
+    if(S(screenName).startsWith('@')) {
+        screenName = S(screenName).chompLeft('@').s;
+    }
+
+    db.collection('tweets').find({'user.screen_name': screenName}).toArray(function(err, tweets) {
+        if (err) throw err;
         callback(_.map(tweets, function(tweet) {
             try {
                 return JSON.parse(tweetJsonBuilder(cleanTweetText(tweet)));
@@ -105,6 +110,24 @@ var getTweetsByScreenName = function(screenName, res, callback) {
             }
         }), res);
     });
+};
+
+/**
+ *
+ * @param screenName
+ * @param res
+ * @param callback
+ */
+var getTweetsNumberByScreenName = function(screenName, res, callback) {
+    if(S(screenName).startsWith('@')) {
+        screenName = S(screenName).chompLeft('@').s;
+    }
+
+    db.collection('tweets').count({'user.screen_name': screenName}, function(err, count) {
+        if (err) throw err;
+        callback({"count": count}, res);
+    });
+
 };
 
 /**
@@ -123,4 +146,5 @@ var cleanTweetText = function (tweet) {
 
 exports.initTwitterWebSocketServices = initTwitterWebSocketServices;
 exports.getTweetsByScreenName = getTweetsByScreenName;
+exports.getTweetsNumberByScreenName = getTweetsNumberByScreenName;
 
