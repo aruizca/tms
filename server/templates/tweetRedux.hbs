@@ -1,7 +1,7 @@
 {
     "id": "{{id}}",
     "created_at": "{{created_at}}",
-    "text": "{{text}}",
+    "text": "{{{text}}}",
     "user": {
         "id": "{{user.id}}",
         "screen_name": "{{user.screen_name}}",
@@ -11,7 +11,7 @@
     , "retweeted_status": {
         "created_at": "{{retweeted_status.created_at}}",
         "id": "{{retweeted_status.id}}",
-        "text": "{{retweeted_status.text}}",
+        "text": "{{{retweeted_status.text}}}",
         "user": {
             "id": "{{retweeted_status.user.id}}",
             "screen_name": "{{retweeted_status.user.screen_name}}",
@@ -21,7 +21,7 @@
     {{/if}}
     {{#if entities.media}}
     , "entities": {
-        media: [
+        "media": [
         {{#each entities.media}}
             {{#if @last}}
                 "{{this.media_url}}"
