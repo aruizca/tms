@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var cfg = require('./app-config');
 var debug = require('debug')('smms');
 
+process.title = 'smms';
+
 
 // DB Connection
 // -------------
@@ -21,7 +23,7 @@ mongoFactory.getConnection(cfg.mongodb.url).then(function(db) {
 // Web Application
 // ---------------
 var app = express();
-var server = app.listen( process.env.PORT || 80, function() {
+var server = app.listen( process.env.PORT || 8080, function() {
     debug('Express server listening on port ' + server.address().port);
 });
 
