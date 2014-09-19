@@ -100,16 +100,35 @@ var getTweetsByScreenName = function(screenName, res, callback) {
         screenName = S(screenName).chompLeft('@').s;
     }
 
-    db.collection('tweets').find({'user.screen_name': screenName}).toArray(function(err, tweets) {
-        if (err) throw err;
-        callback(_.map(tweets, function(tweet) {
-            try {
-                return JSON.parse(tweetJsonBuilder(cleanTweetText(tweet)));
-            } catch (ex) {
-                debug(ex);
-            }
-        }), res);
-    });
+    if (screenName.toLowerCase() === 'anonymous') {
+        db.collection('registration').find({'Twitter handel': {$ne: '', $not: /^no$/i}},{_id:0, 'Twitter handel': 1}).toArray(function(err, twitterAccountAttendees) {
+            if (err) throw err;
+            var twitterAccounts = _.map(twitterAccountAttendees, function(twitterAccount) {
+                return twitterAccount['Twitter handel'];
+            });
+            db.collection('tweets').find({'user.screen_name': {$nin: twitterAccounts}}).toArray(function(err, tweets) {
+                if (err) throw err;
+                callback(_.map(tweets, function(tweet) {
+                    try {
+                        return JSON.parse(tweetJsonBuilder(cleanTweetText(tweet)));
+                    } catch (ex) {
+                        debug(ex);
+                    }
+                }), res);
+            });
+        });
+    } else {
+        db.collection('tweets').find({'user.screen_name': screenName}).toArray(function(err, tweets) {
+            if (err) throw err;
+            callback(_.map(tweets, function(tweet) {
+                try {
+                    return JSON.parse(tweetJsonBuilder(cleanTweetText(tweet)));
+                } catch (ex) {
+                    debug(ex);
+                }
+            }), res);
+        });
+    }
 };
 
 /**

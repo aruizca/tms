@@ -9,7 +9,7 @@ router.get('/tweets/:screenName', function (req, res) {
     if (screenName) {
         twitterService.getTweetsByScreenName(screenName, res, function (tweets, res) {
             res.jsonp(tweets);
-        })
+        });
     }
 });
 
@@ -18,7 +18,7 @@ router.get('/tweets/number/:screenName', function (req, res) {
     if (screenName) {
         twitterService.getTweetsNumberByScreenName(screenName, res, function (tweetsNumber, res) {
             res.jsonp(tweetsNumber);
-        })
+        });
     }
 });
 
