@@ -1,14 +1,20 @@
 var express = require('express');
 var router = express.Router();
 var S = require('string');
+var _ = require('underscore');
+
 var twitterService = require('../services/twitterService');
 var questionaireService = require('../services/questionaireService');
 
 router.get('/tweets/filter', function (req, res) {
     var filterParams = req.body;
-    twitterService.filterTweets(filterParams, res, function (tweets, res) {
-        res.jsonp(tweets);
-    });
+    if (!_.isEmpty(filterParams)) {
+        twitterService.filterTweets(filterParams, res, function (tweets, res) {
+            res.jsonp(tweets);
+        });
+    } else {
+        res.redirect('/');
+    }
 });
 
 router.get('/tweets/:screenName', function (req, res) {
