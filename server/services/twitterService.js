@@ -7,6 +7,7 @@ var path = require('path');
 var debug = require('debug')('smms');
 var _ = require('underscore');
 var S = require('string');
+var moment = require('moment-timezone');
 
 // Reduced templates
 var tweetReduxTemplate = fs.readFileSync('server/templates/tweetRedux.hbs', 'utf8');
@@ -88,6 +89,7 @@ var initTwitterWebSocketServices = function(app, io) {
     });
 };
 
+
 /**
  *
  * @param screenName
@@ -108,27 +110,75 @@ var getTweetsByScreenName = function(screenName, res, callback) {
             });
             db.collection('tweets').find({'user.screen_name': {$nin: twitterAccounts}}).toArray(function(err, tweets) {
                 if (err) throw err;
-                callback(_.map(tweets, function(tweet) {
-                    try {
-                        return JSON.parse(tweetJsonBuilder(cleanTweetText(tweet)));
-                    } catch (ex) {
-                        debug(ex);
-                    }
-                }), res);
+                callback(renderReducedTweet(tweets), res);
             });
         });
     } else {
         db.collection('tweets').find({'user.screen_name': screenName}).toArray(function(err, tweets) {
             if (err) throw err;
-            callback(_.map(tweets, function(tweet) {
-                try {
-                    return JSON.parse(tweetJsonBuilder(cleanTweetText(tweet)));
-                } catch (ex) {
-                    debug(ex);
-                }
-            }), res);
+            callback(renderReducedTweet(tweets), res);
         });
     }
+};
+
+/**
+ *
+ * @param filterParamms
+ * @param res
+ * @param callback
+ */
+var filterTweets = function (filterParams, res, callback) {
+    var query = {$and: []};
+
+    if (filterParams.before) {
+        var timestamp = moment(filterParams.before, 'DD/MM/YYYY HH:mm').tz('Australia/Canberra').format('X');
+        // Transform timestamp to milliseconds
+        timestamp += '000';
+        query["$and"].push({"$where": 'parseInt(this.timestamp_ms) <= ' + timestamp });
+    }
+
+    if (filterParams.after) {
+        var timestamp = moment(filterParams.after, 'DD/MM/YYYY HH:mm').tz('Australia/Canberra').format('X');
+        // Transform timestamp to milliseconds
+        timestamp += '000';
+        query["$and"].push({"$where": 'parseInt(this.timestamp_ms) >= ' + timestamp });
+    }
+
+    if (filterParams.screenName) {
+        var screenName = filterParams.screenName;
+        if(S(screenName).startsWith('@')) {
+            screenName = S(screenName).chompLeft('@').s;
+        }
+        query["$and"].push({"user.screen_name": screenName});
+    }
+
+    if (filterParams.hasMedia) {
+        query["$and"].push({"entities.media": {"$exists": filterParams.hasMedia === true ? true : false}});
+    }
+
+    if (filterParams.contains) {
+        query["$and"].push({$text: {$search: filterParams.contains, $language: 'en'}});
+    }
+
+    db.collection('tweets').find(query).toArray(function(err, tweets) {
+        if (err) throw err;
+        callback(renderReducedTweet(tweets), res);
+    });
+};
+
+/**
+ *
+ * @param tweets
+ * @returns {*}
+ */
+var renderReducedTweet = function (tweets) {
+    return _.map(tweets, function (tweet) {
+        try {
+            return JSON.parse(tweetJsonBuilder(cleanTweetText(tweet)));
+        } catch (ex) {
+            debug(ex);
+        }
+    });
 };
 
 /**
@@ -163,6 +213,7 @@ var cleanTweetText = function (tweet) {
     return tweet;
 };
 
+exports.filterTweets = filterTweets;
 exports.initTwitterWebSocketServices = initTwitterWebSocketServices;
 exports.getTweetsByScreenName = getTweetsByScreenName;
 exports.getTweetsNumberByScreenName = getTweetsNumberByScreenName;

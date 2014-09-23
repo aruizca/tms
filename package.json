@@ -26,6 +26,7 @@
         "multiparty": "~3.3.2",
         "string": "~2.0.1",
         "excel-parser": "~0.2.2",
+        "moment-timezone": "~0.2.2",
         "q": "~1.0.1"
     },
     "devDependencies": {

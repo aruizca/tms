@@ -18,7 +18,21 @@ var mongoFactory = require('mongo-factory');
 
 mongoFactory.getConnection(cfg.mongodb.url).then(function(db) {
     debug("MongoDB Connection Pool has been initialized");
+    // Initialize MongoDB required indexes if they are not present already
+    db.ensureIndex("tweets", {
+        "user.screen_name": 1
+    }, function(err, indexname) {
+        debug('MongoDB Tweets.user.screen_name ready');
+    });
+    db.ensureIndex("tweets", {
+        text: "text"
+    }, function(err, indexname) {
+        debug('MongoDB Tweets.text Full Text Search Index ready');
+    });
+
 });
+
+
 
 // Web Application
 // ---------------

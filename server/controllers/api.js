@@ -4,6 +4,13 @@ var S = require('string');
 var twitterService = require('../services/twitterService');
 var questionaireService = require('../services/questionaireService');
 
+router.get('/tweets/filter', function (req, res) {
+    var filterParams = req.body;
+    twitterService.filterTweets(filterParams, res, function (tweets, res) {
+        res.jsonp(tweets);
+    });
+});
+
 router.get('/tweets/:screenName', function (req, res) {
     var screenName = req.params.screenName;
     if (screenName) {
@@ -21,6 +28,8 @@ router.get('/tweets/number/:screenName', function (req, res) {
         });
     }
 });
+
+
 
 router.get('/mongodbcollectionquery/:collection', function (req, res) {
     console.log("Starting questionaire service callback.");
