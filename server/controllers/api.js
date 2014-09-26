@@ -35,8 +35,6 @@ router.get('/tweets/number/:screenName', function (req, res) {
     }
 });
 
-
-
 router.get('/mongodbcollectionquery/:collection', function (req, res) {
     console.log("Starting questionaire service callback.");
     try {
@@ -47,7 +45,6 @@ router.get('/mongodbcollectionquery/:collection', function (req, res) {
         console.log("Something went wrong in questionaire service callback.");
     }
 });
-
 
 router.post('/mongodbcollectionquery/:collection', function (req, res) {
     var object = req.body;

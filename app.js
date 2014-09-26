@@ -32,8 +32,6 @@ mongoFactory.getConnection(cfg.mongodb.url).then(function(db) {
 
 });
 
-
-
 // Web Application
 // ---------------
 var app = express();

@@ -32,7 +32,6 @@ $(function() {
         console.log(JSON.parse(tweet));
     });
 
-
     $(".toggleButton").on("click", function(e) {
         e.preventDefault();
         $(".toggleButton").removeAttr("disabled");
