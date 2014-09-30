@@ -207,6 +207,8 @@ var getTweetsNumberByScreenName = function(screenName, res, callback) {
  */
 var cleanTweetText = function (tweet) {
     tweet.text = S(JSON.stringify(tweet.text.replace("\"", ''))).chompLeft("\"").chompRight("\"").s;
+    tweet.user.name = S(JSON.stringify(tweet.user.name.replace("\"", ''))).chompLeft("\"").chompRight("\"").s;
+
     if (tweet.retweeted_status) {
         tweet.retweeted_status.text = S(JSON.stringify(tweet.retweeted_status.text)).chompLeft("\"").chompRight("\"").s;
     }

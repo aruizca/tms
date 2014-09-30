@@ -29,7 +29,7 @@ $(function() {
 
     // Every time there is a new tweet
     socket.on("server:tweet", function(tweet){
-        console.log(JSON.parse(tweet));
+        console.log(tweet);
     });
 
     $(".toggleButton").on("click", function(e) {
