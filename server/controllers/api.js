@@ -4,6 +4,7 @@ var S = require('string');
 var _ = require('underscore');
 
 var twitterService = require('../services/twitterService');
+var registrationService = require('../services/registrationService');
 var questionaireService = require('../services/questionaireService');
 
 router.get('/tweets/filter', function (req, res) {
@@ -33,6 +34,20 @@ router.get('/tweets/number/:screenName', function (req, res) {
             res.jsonp(tweetsNumber);
         });
     }
+});
+
+router.get('/attendees/all', function (req, res) {
+    registrationService.getAttendeesByScreenName('', res, function(attendees, res) {
+        res.jsonp(attendees);
+    });
+});
+
+router.get('/attendees/pin/:pin', function (req, res) {
+
+});
+
+router.get('/attendees/twitter/:screenName', function (req, res) {
+
 });
 
 router.get('/mongodbcollectionquery/:collection', function (req, res) {
