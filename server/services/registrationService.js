@@ -3,6 +3,7 @@ var cfg = require('../../app-config.json');
 var excelParser = require('excel-parser');
 var S = require('string');
 var _ = require('underscore');
+var async = require('async');
 
 // DB Connection
 var mongoFactory = require('mongo-factory');
@@ -80,19 +81,19 @@ var getAttendeesByScreenName = function(screenName, res, callback) {
 
     if (!screenName) {
         db.collection('registration').find().toArray(function (err, attendees) {
-            var attendeesWithTweetsCount = [];
-            var countTweets = function(attendee) {
+            // Asynchronous and parallel loop over each attendee
+            async.each(attendees, function(attendee, done) {
+                // Grab count
                 db.collection('tweets').count({'user.screen_name': attendee.twitter}, function(err, count) {
+                    // Apply count to attendee object and call sub-callback
                     attendee.tweetsCount = count;
-                    attendeesWithTweetsCount.push(attendee);
-                    if (attendees.length == attendeesWithTweetsCount.length) {
-                        callback(attendeesWithTweetsCount, res);
-                    }
+                    done();
                 });
-            };
-            _.each(attendees, function(attendee, index) {
-                countTweets(attendee);
+            }, function() {
+                // async loop done!
+                callback(attendees, res);
             });
+
         });
     } else {
 
