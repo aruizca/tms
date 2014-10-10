@@ -42,23 +42,6 @@ var processExcelDocument = function (document, res, callback) {
                                 screenName = S(screenName).chompLeft('@').s;
                             }
                             jsonObj.twitter = screenName;
-                            // CIRCLE DATA
-                            jsonObj.circleData = [];
-                            // First Name
-                            jsonObj.circleData.push(_.isString(row[2]) ? row[2].toUpperCase().charCodeAt(0) : 0);
-                            // Surname
-                            jsonObj.circleData.push(_.isString(row[1]) ? row[1].toUpperCase().charCodeAt(0) : 0);
-                            // Interests
-                            jsonObj.circleData.push(!S(row[9]).isEmpty() ? row[9].split('|').length : 0);
-                            // Age
-                            jsonObj.circleData.push(!S(row[7]).isEmpty() && S(row[7]).isNumeric() ? parseInt(row[7]) : 0);
-                            // State
-                            jsonObj.circleData.push(_.isString(row[4]) ? row[4].toUpperCase().charCodeAt(0) : 0);
-                            // Postcode
-                            jsonObj.circleData.push(!S(row[5]).isEmpty() && S(row[5]).isNumeric() ? parseInt(row[5]) : 2500);
-                            // Pin 1 and 2
-                            jsonObj.circleData.push(_.isString(row[0]) && row[0].length == 4 ? parseInt(row[0].substr(0, 2)) : 0);
-                            jsonObj.circleData.push(_.isString(row[0]) && row[0].length == 4 ? parseInt(row[0].substr(2, 4)) : 0);
 
                             db.collection("registration").insert(jsonObj, function () {
                                 if (err) throw(err);
