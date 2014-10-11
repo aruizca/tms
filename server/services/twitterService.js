@@ -160,7 +160,7 @@ var filterTweets = function (filterParams, res, callback) {
         query["$and"].push({$text: {$search: filterParams.contains, $language: 'en'}});
     }
 
-    db.collection('tweets').find(query).toArray(function(err, tweets) {
+    db.collection('tweets').find(query, {'limit': 100, 'sort': 'timestamp_ms' }).toArray(function(err, tweets) {
         if (err) throw err;
         callback(renderReducedTweet(tweets), res);
     });
